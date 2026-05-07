@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gestión de Empleados (Modo Oscuro)</title>
+  <style>
+    :root{
+      --bg:#0b0f12; --card:#0f1417; --muted:#9aa5ad; --accent:#7c4dff; --input:#0b0f12;
+      --glass: rgba(255,255,255,0.03);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,var(--bg),#061017);color:#e6eef3;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .container{width:100%;max-width:1100px}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:1.25rem;margin:0}
+    .grid{display:grid;grid-template-columns:1fr 420px;gap:20px}
+    @media (max-width:900px){ .grid{grid-template-columns:1fr} }
+    .card{background:linear-gradient(180deg,var(--card),#0c1113);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,10,0.6);border:1px solid rgba(255,255,255,0.03)}
+    form .row{display:flex;gap:10px;margin-bottom:10px}
+    @media (max-width:520px){ form .row{flex-direction:column} }
+    label{font-size:0.8rem;color:var(--muted);display:block;margin-bottom:6px}
+    input, select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--input);color:inherit}
+    button{background:var(--accent);border:none;color:white;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600}
+    table{width:100%;border-collapse:collapse;margin-top:6px}
+    th,td{padding:10px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.03);font-size:0.95rem}
+    th{color:var(--muted);font-weight:600;font-size:0.85rem}
+    .empty{color:var(--muted);padding:20px;text-align:center}
+    .topbar{display:flex;gap:8px;align-items:center}
+    .count{font-size:0.9rem;color:var(--muted)}
+    footer{margin-top:12px;color:var(--muted);font-size:0.85rem;text-align:center}
+    .search{margin-left:12px;padding:8px;border-radius:8px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);color:inherit}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Gestión de Empleados — Tema Oscuro</h1>
+      <div class="topbar">
+        <div class="count">Responsive · SQLite · FastAPI</div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <h2 style="margin-top:0">Lista de Empleados</h2>
+        {% if employees and employees|length > 0 %}
+        <table>
+          <thead>
+            <tr><th>Nombre</th><th>Apellido</th><th>DNI</th><th>Cargo</th></tr>
+          </thead>
+          <tbody>
+            {% for e in employees %}
+            <tr>
+              <td>{{ e.first_name }}</td>
+              <td>{{ e.last_name }}</td>
+              <td>{{ e.dni }}</td>
+              <td>{{ e.position }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div class="empty">No hay empleados registrados. Usa el formulario para agregar uno.</div>
+        {% endif %}
+        <footer>Mostrando {{ employees|length }} registros</footer>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-top:0">Agregar Empleado</h2>
+        <form action="/add" method="post" autocomplete="off">
+          <div class="row">
+            <div style="flex:1">
+              <label for="first_name">Nombre</label>
+              <input id="first_name" name="first_name" required />
+            </div>
+            <div style="flex:1">
+              <label for="last_name">Apellido</label>
+              <input id="last_name" name="last_name" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div style="flex:1">
+              <label for="dni">DNI</label>
+              <input id="dni" name="dni" required />
+            </div>
+            <div style="flex:1">
+              <label for="position">Cargo</label>
+              <input id="position" name="position" required />
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-top:10px;justify-content:flex-end">
+            <button type="submit">Guardar</button>
+          </div>
+        </form>
+        <p style="color:var(--muted);margin-top:12px;font-size:0.85rem">La aplicación es responsive y guarda datos en SQLite (app.db).</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
